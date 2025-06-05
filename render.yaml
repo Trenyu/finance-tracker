@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: finance-tracker
+    env: python
+    plan: free
+    buildCommand: ""
+    startCommand: "python app.py"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: taraska  # 👈 El nombre que le pusiste a tu base de datos
+          property: connectionString
+
+databases:
+  - name: taraska
+    plan: free

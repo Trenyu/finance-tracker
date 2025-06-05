@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Finance Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> 
+</head>
+<body>
+
+<button onclick="toggleTheme()" style="margin-top: 20px;">🌗 Cambiar tema</button>
+
+<script>
+  function toggleTheme() {
+    document.body.classList.toggle("light");
+    localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
+  }
+
+  window.onload = () => {
+    if (localStorage.getItem("theme") === "light") {
+      document.body.classList.add("light");
+    }
+  };
+</script>
+
+<h1>Finance Tracker</h1>
+
+<form action="/presupuesto" method="post" style="margin-bottom: 10px;">
+  <label for="presupuesto">Presupuesto mensual:</label>
+  <input type="number" name="presupuesto" value="{{ presupuesto_maximo or '' }}" min="0" required>
+  <button type="submit">Guardar</button>
+</form>
+
+<div class="resumen {% if restante is not none and restante < 0 %}resumen-negativo{% endif %}">
+  <p><strong>Presupuesto mensual:</strong> ${{ presupuesto_maximo or 0 }}</p>
+  <p><strong>Total gastado:</strong> ${{ total }}</p>
+  <p><strong>Disponible:</strong> ${{ restante if restante is not none else 0 }}</p>
+</div>
+
+<form action="/agregar" method="post">
+  <label>Fecha: <input type="date" name="fecha" required></label>
+  <label>Categoría: <input type="text" name="categoria" required></label>
+  <label>Descripción: <input type="text" name="descripcion" required></label>
+  <label>Monto: <input type="number" name="monto" step="0.01" required></label>
+  <button type="submit">Agregar Gasto</button>
+</form>
+
+<form action="/filtrar" method="post">
+  <label>Filtrar por categoría:
+    <select name="categoria">
+      {% for cat in categorias %}
+      <option value="{{ cat }}">{{ cat }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">Filtrar</button>
+</form>
+
+<form action="/reiniciar" method="post" onsubmit="return confirm('¿Estás seguro de que querés borrar todos los gastos?');">
+  <button type="submit" class="red">Reiniciar datos</button>
+</form>
+
+<a href="/exportar"><button class="boton-exportar">Exportar a Excel</button></a>
+
+{% if aviso %}
+  <p class="aviso-suave">{{ aviso }}</p>
+{% endif %}
+
+<table>
+  <tr>
+    <th>Fecha</th>
+    <th>Categoría</th>
+    <th>Descripción</th>
+    <th>Monto</th>
+  </tr>
+  {% for gasto in gastos %}
+  <tr>
+    <td>{{ gasto.fecha }}</td>
+    <td>{{ gasto.categoria }}</td>
+    <td>{{ gasto.descripcion }}</td>
+    <td>${{ gasto.monto }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+</body>
+</html>
+
