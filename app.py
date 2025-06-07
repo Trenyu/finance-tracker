@@ -7,6 +7,7 @@ import pandas as pd
 import os
 
 app = Flask(__name__)
+init_db()
 PRESUPUESTO_FILE = 'presupuesto.txt'
 
 # Presupuesto
