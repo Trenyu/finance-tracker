@@ -1,16 +1,24 @@
+# render.yaml
+# Versión corregida y lista para producción
+
 services:
+  # Tu servicio web (la aplicación Python)
   - type: web
     name: finance-tracker
     env: python
     plan: free
-    buildCommand: ""
-    startCommand: "python app.py"
+    # CORRECTO: Instala las dependencias de tu proyecto
+    buildCommand: "pip install -r requirements.txt"
+    # CORRECTO: Inicia la app con un servidor de producción
+    startCommand: "gunicorn app:app"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: taraska  # 👈 El nombre que le pusiste a tu base de datos
+          # Este nombre debe coincidir con el nombre del servicio de la base de datos de abajo
+          name: taraska
           property: connectionString
 
+# Tu servicio de base de datos
 databases:
   - name: taraska
     plan: free
