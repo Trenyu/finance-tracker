@@ -5,6 +5,7 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 
 
 # Cargar variables desde .env
+from dotenv import load_dotenv
 load_dotenv()
 
 # Obtener la URL de conexión desde la variable de entorno
