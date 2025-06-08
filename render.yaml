@@ -1,32 +1,27 @@
 # render.yaml
-# Versión FINAL con un Job para inicializar la base de datos
+# Versión final, simple y correcta.
+
+databases:
+  # Define tu base de datos primero
+  - name: taraska
+    plan: free
 
 services:
-  # 1. Un "Job" para inicializar la BD. Se ejecuta una sola vez.
-  - type: job
-    name: db-setup
-    plan: free # Los jobs son gratis si se ejecutan en menos de 5 mins
-    # Este comando importa tu función y la ejecuta
-    startCommand: "python -c 'from database import init_db; init_db()'"
-
-  # 2. Tu servicio web. SOLO se iniciará después de que el Job termine.
+  # Define tu aplicación web
   - type: web
     name: finance-tracker
-    plan: free
     env: python
+    plan: free
+    # 1. Instala las dependencias
     buildCommand: "pip install -r requirements.txt"
+    # 2. Inicia la app con Gunicorn
     startCommand: "gunicorn app:app"
+    # 3. Este hook se ejecuta UNA SOLA VEZ, solo en el primer deploy.
+    #    Aquí es donde creamos las tablas de la base de datos.
+    initialDeployHook: "python -c 'from database import init_db; init_db()'"
     envVars:
+      # 4. Conecta la app a la base de datos de forma automática
       - key: DATABASE_URL
         fromDatabase:
           name: taraska
           property: connectionString
-    # Esta línea es NUEVA e importante.
-    # Le dice a la app que espere a que el Job de la BD termine.
-    initialDeployHook: "python -c 'from database import init_db; init_db()'"
-
-
-databases:
-  # 3. Tu base de datos.
-  - name: taraska
-    plan: free
