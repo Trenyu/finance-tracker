@@ -1,26 +1,32 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+# database.py
+
 import os
-DATABASE_URL = os.environ.get("DATABASE_URL")
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
+# 1. Lee la variable de entorno que Render te da.
+#    No necesitamos dotenv en producción.
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
-# Cargar variables desde .env
-from dotenv import load_dotenv
-load_dotenv()
+# 2. (MUY RECOMENDADO) Render a veces usa "postgres://" y SQLAlchemy necesita "postgresql://"
+#    Esta línea lo corrige automáticamente si es necesario.
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-# Obtener la URL de conexión desde la variable de entorno
-DATABASE_URL = os.getenv("DATABASE_URL")
+# 3. (MUY RECOMENDADO) Una comprobación para asegurarnos de que la URL existe.
+if not DATABASE_URL:
+    raise ValueError("Error: La variable de entorno DATABASE_URL no está configurada.")
 
-# Crear el motor de SQLAlchemy
+# Crear el motor de SQLAlchemy con la URL correcta
 engine = create_engine(DATABASE_URL)
 
-# Base para declarar modelos
-Base = declarative_base()
-
-# Crear sesión para interactuar con la base
+# El resto de tu código se queda igual
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Función para inicializar la base (crear tablas)
+Base = declarative_base()
+
 def init_db():
-    import models  # se importa acá para evitar dependencias circulares
+    # Se importa acá para evitar dependencias circulares
+    from models import Gasto 
     Base.metadata.create_all(bind=engine)
