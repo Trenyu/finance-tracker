@@ -1,196 +1,85 @@
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #1f1f1f;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #1e1e2f;
   color: #f0f0f0;
-  margin: 30px;
-  transition: background-color 0.4s ease, color 0.4s ease;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 700px;
+  background-color: #2c2c3c;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
 }
 
 h1 {
-  color: #ffffff;
+  text-align: center;
+  color: #00c3ff;
+}
+
+.form {
   margin-bottom: 20px;
 }
 
-form {
-  margin-bottom: 20px;
+.form label {
+  display: block;
+  margin: 10px 0 4px;
+  font-weight: bold;
 }
 
-input, select {
-  margin: 5px;
-  padding: 10px;
-  border: 1px solid #555;
-  border-radius: 6px;
-  background-color: #2a2a2a;
-  color: #f0f0f0;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-input:focus, select:focus {
-  outline: none;
-  border-color: #4aa3df;
+.form input,
+.form select {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #444;
+  color: #fff;
 }
 
 button {
-  padding: 10px 16px;
-  background-color: #4aa3df;
-  color: #fff;
+  background-color: #00c3ff;
+  color: #000;
+  padding: 10px 20px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-weight: bold;
 }
 
 button:hover {
-  background-color: #3498db;
-}
-
-button[type="submit"] {
-  margin-left: 10px;
-}
-
-button.red {
-  background-color: #6c757d;
-  color: #fff;
-}
-
-button.red:hover {
-  background-color: #5a6268;
-}
-
-.boton-exportar {
-  background-color: #2e8b57;
-  color: white;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 5px;
-  margin-left: 10px;
-  margin-top: 10px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.boton-exportar:hover {
-  background-color: #248f6b;
-}
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin-top: 20px;
-}
-
-th, td {
-  border: 1px solid #444;
-  padding: 12px;
-  text-align: left;
-}
-
-th {
-  background-color: #333;
-  color: #f0f0f0;
-}
-
-tr:nth-child(even) {
-  background-color: #2b2b2b;
-}
-
-.total {
-  margin-top: 15px;
-  font-weight: bold;
-  color: #ffffff;
-}
-
-body.light {
-  background-color: #f4f4f4;
-  color: #222;
-}
-
-body.light input,
-body.light select,
-body.light button,
-body.light table,
-body.light th,
-body.light td {
-  background-color: #fff;
-  color: #222;
-  border: 1px solid #ccc;
-}
-
-body.light button {
-  background-color: #4aa3df;
-  color: white;
-}
-
-body.light button:hover {
-  background-color: #3498db;
-}
-
-body.light .boton-exportar {
-  background-color: #3cb371;
-}
-
-body.light .boton-exportar:hover {
-  background-color: #2e8b57;
-}
-
-body.light .total {
-  color: #333;
-}
-
-.alerta {
-  background-color: #ffcccb;
-  color: #a94442;
-  padding: 10px;
-  margin-top: 10px;
-  border: 1px solid #a94442;
-  border-radius: 5px;
-  font-weight: bold;
-  text-align: center;
-}
-
-.presupuesto {
-  margin-top: 10px;
-  font-weight: bold;
-  color: #e0e0e0;
-}
-
-.positivo {
-  color: #8fce00;
-}
-
-.peligro {
-  color: #ffcc00;
-}
-
-.negativo {
-  color: #ff4d4d;
-  font-weight: bold;
+  background-color: #00a0cc;
 }
 
 .resumen {
-  background-color: #2e2e2e;
-  color: #fff;
-  border-left: 5px solid #4caf50;
+  margin: 20px 0;
   padding: 10px;
-  margin: 15px 0;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
+  background-color: #333;
+  border-radius: 6px;
 }
 
-.resumen p {
-  margin: 5px 0;
-  font-size: 16px;
+.alerta {
+  background-color: #ff4d4d;
+  padding: 10px;
+  color: white;
+  margin-top: 10px;
+  border-radius: 6px;
 }
 
-.resumen-negativo {
-  border-left: 5px solid #e74c3c;
-  background-color: #3c2e2e;
-  color: #ffd6d6;
+.gastos ul {
+  list-style: none;
+  padding: 0;
 }
 
-.aviso-suave {
-  background-color: transparent;
-  color: #f39c12;
-  font-weight: bold;
-  padding: 10px 0;
+.gastos li {
+  background-color: #383850;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 5px;
 }
