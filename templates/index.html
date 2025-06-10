@@ -1,59 +1,98 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Finance Tracker</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Finance Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <h1>📊 Finance Tracker</h1>
+    <div class="container">
+        <header>
+            <h1>💸 Finance Tracker</h1>
+            <button onclick="toggleTheme()">🌗 Cambiar tema</button>
+        </header>
 
-    <form action="/presupuesto" method="post" class="form">
-      <label>Presupuesto mensual:</label>
-      <input type="number" name="presupuesto" min="0" value="{{ presupuesto_maximo or '' }}" required>
-      <button type="submit">Guardar presupuesto</button>
-    </form>
+        <section class="presupuesto-form">
+            <form action="/presupuesto" method="post">
+                <label>Presupuesto mensual:
+                    <input type="number" name="presupuesto" value="{{ presupuesto or '' }}" min="0" required>
+                </label>
+                <button type="submit">Guardar</button>
+            </form>
+        </section>
 
-    <div class="resumen">
-      <p><strong>Total gastado:</strong> ${{ total }}</p>
-      <p><strong>Disponible:</strong> ${{ restante }}</p>
-      {% if aviso %}
-      <div class="alerta">{{ aviso }}</div>
-      {% endif %}
+        <section class="resumen {% if restante is not none and restante < 0 %}resumen-negativo{% endif %}">
+            <p><strong>Presupuesto:</strong> ${{ presupuesto_maximo or 0 }}</p>
+            <p><strong>Gastado:</strong> ${{ total }}</p>
+            <p><strong>Disponible:</strong> 
+                <span class="{% if restante < 0 %}negativo{% elif restante < 100 %}peligro{% else %}positivo{% endif %}">
+                    ${{ restante }}
+                </span>
+            </p>
+        </section>
+
+        {% if aviso %}
+            <div class="aviso-suave">{{ aviso }}</div>
+        {% endif %}
+
+        <section class="formulario">
+            <form action="/agregar" method="post">
+                <input type="date" name="fecha" required>
+                <input type="text" name="categoria" placeholder="Categoría" required>
+                <input type="text" name="descripcion" placeholder="Descripción" required>
+                <input type="number" name="monto" step="0.01" placeholder="Monto" required>
+                <button type="submit">Agregar</button>
+            </form>
+
+            <form action="/filtrar" method="post">
+                <select name="categoria">
+                    {% for cat in categorias %}
+                    <option value="{{ cat }}">{{ cat }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Filtrar</button>
+            </form>
+
+            <form action="/reiniciar" method="post" onsubmit="return confirm('¿Estás seguro de que querés borrar todos los gastos?');">
+                <button type="submit" class="red">Reiniciar</button>
+            </form>
+
+            <a href="/exportar"><button class="boton-exportar">📁 Exportar Excel</button></a>
+        </section>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Categoría</th>
+                    <th>Descripción</th>
+                    <th>Monto</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gasto in gastos %}
+                <tr>
+                    <td>{{ gasto.Fecha }}</td>
+                    <td>{{ gasto.Categoria }}</td>
+                    <td>{{ gasto.Descripcion }}</td>
+                    <td>${{ gasto.Monto }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-    <form action="/agregar" method="post" class="form">
-      <label>Fecha:</label>
-      <input type="date" name="fecha" required>
-      <label>Categoría:</label>
-      <input type="text" name="categoria" required>
-      <label>Descripción:</label>
-      <input type="text" name="descripcion" required>
-      <label>Monto:</label>
-      <input type="number" step="0.01" name="monto" required>
-      <button type="submit">Agregar gasto</button>
-    </form>
-
-    <form action="/filtrar" method="post" class="form">
-      <label>Filtrar por categoría:</label>
-      <select name="categoria">
-        {% for cat in categorias %}
-        <option value="{{ cat }}">{{ cat }}</option>
-        {% endfor %}
-      </select>
-      <button type="submit">Filtrar</button>
-    </form>
-
-    <div class="gastos">
-      <h2>Gastos</h2>
-      <ul>
-        {% for g in gastos %}
-        <li><strong>{{ g.fecha }}</strong> | {{ g.categoria }} - {{ g.descripcion }}: ${{ g.monto }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle("light");
+            localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
+        }
+        window.onload = () => {
+            if (localStorage.getItem("theme") === "light") {
+                document.body.classList.add("light");
+            }
+        };
+    </script>
 </body>
 </html>
