@@ -1,99 +1,143 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Finance Tracker</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terminal Moderna - UI Bonita</title>
+  <style>
+    :root {
+      --bg: #121212;
+      --fg: #e0e0e0;
+      --accent: #00ffd0;
+      --card: #1e1e1e;
+      --border: #333;
+      --radius: 12px;
+      --font: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: var(--font);
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    h1, h2 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: #222;
+      color: var(--fg);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+
+    th {
+      background: #2c2c2c;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .button:hover {
+      filter: brightness(1.1);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>💸 Finance Tracker</h1>
-            <button onclick="toggleTheme()">🌗 Cambiar tema</button>
-        </header>
+  <div class="container">
+    <h1>Interfaz de Terminal Moderna</h1>
 
-        <section class="presupuesto-form">
-            <form action="/presupuesto" method="post">
-                <label>Presupuesto mensual:
-                    <input type="number" name="presupuesto" value="{{ presupuesto or '' }}" min="0" required>
-                </label>
-                <button type="submit">Guardar</button>
-            </form>
-        </section>
+    <div class="card">
+      <h2>Formulario de Comando</h2>
+      <label for="cmd">Comando</label>
+      <input type="text" id="cmd" placeholder="ej: sudo desplegar esperanza" />
 
-       
-        <span class="{% if restante is not none and restante < 0 %}negativo{% elif restante is not none and restante < 100 %}peligro{% else %}positivo{% endif %}">
-            <p><strong>Presupuesto:</strong> ${{ presupuesto_maximo or 0 }}</p>
-            <p><strong>Gastado:</strong> ${{ total }}</p>
-            <p><strong>Disponible:</strong> 
-                <span class="{% if restante is not none and restante < 0 %}negativo{% elif restante is not none and restante < 100 %}peligro{% else %}positivo{% endif %}">
-                    ${{ restante }}
-                </span>
-            </p>
-        </section>
+      <label for="desc">Descripción</label>
+      <textarea id="desc" rows="4" placeholder="Contanos qué desastre querés ejecutar..."></textarea>
 
-        {% if aviso %}
-            <div class="aviso-suave">{{ aviso }}</div>
-        {% endif %}
-
-        <section class="formulario">
-            <form action="/agregar" method="post">
-                <input type="date" name="fecha" required>
-                <input type="text" name="categoria" placeholder="Categoría" required>
-                <input type="text" name="descripcion" placeholder="Descripción" required>
-                <input type="number" name="monto" step="0.01" placeholder="Monto" required>
-                <button type="submit">Agregar</button>
-            </form>
-
-            <form action="/filtrar" method="post">
-                <select name="categoria">
-                    {% for cat in categorias %}
-                    <option value="{{ cat }}">{{ cat }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Filtrar</button>
-            </form>
-
-            <form action="/reiniciar" method="post" onsubmit="return confirm('¿Estás seguro de que querés borrar todos los gastos?');">
-                <button type="submit" class="red">Reiniciar</button>
-            </form>
-
-            <a href="/exportar"><button class="boton-exportar">📁 Exportar Excel</button></a>
-        </section>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Categoría</th>
-                    <th>Descripción</th>
-                    <th>Monto</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for gasto in gastos %}
-                <tr>
-                    <td>{{ gasto.Fecha }}</td>
-                    <td>{{ gasto.Categoria }}</td>
-                    <td>{{ gasto.Descripcion }}</td>
-                    <td>${{ gasto.Monto }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+      <button class="button">Ejecutar</button>
     </div>
 
-    <script>
-        function toggleTheme() {
-            document.body.classList.toggle("light");
-            localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
-        }
-        window.onload = () => {
-            if (localStorage.getItem("theme") === "light") {
-                document.body.classList.add("light");
-            }
-        };
-    </script>
+    <div class="card">
+      <h2>Resumen</h2>
+      <p>Estado: <strong>Inactivo</strong></p>
+      <p>Última acción: <em>Intento de diseño decente</em></p>
+    </div>
+
+    <div class="card">
+      <h2>Logs</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Evento</th>
+            <th>Resultado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2025-06-09</td>
+            <td>Rediseño estético</td>
+            <td>Éxito visual moderado</td>
+          </tr>
+          <tr>
+            <td>2025-06-08</td>
+            <td>Botón presionado</td>
+            <td>Confusión existencial</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </body>
 </html>
