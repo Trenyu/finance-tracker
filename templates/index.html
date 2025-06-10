@@ -27,7 +27,7 @@
             <p><strong>Presupuesto:</strong> ${{ presupuesto_maximo or 0 }}</p>
             <p><strong>Gastado:</strong> ${{ total }}</p>
             <p><strong>Disponible:</strong> 
-                <span class="{% if restante < 0 %}negativo{% elif restante < 100 %}peligro{% else %}positivo{% endif %}">
+                <span class="{% if restante is not none and restante < 0 %}negativo{% elif restante is not none and restante < 100 %}peligro{% else %}positivo{% endif %}">
                     ${{ restante }}
                 </span>
             </p>
